@@ -18,11 +18,12 @@ func PageContext(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
 		// 1. Проверяем исключения для статики и публичных страниц
-		if strings.HasPrefix(path, "/static/") {
-			slog.Debug("[PCTX]", "Пропуск публичного пути без проверки SSO, path", path)
+		if config.IsPublicPath(path) {
+			slog.Debug("[PCTX] Публичный путь, пропускаем без SSO", "path", path)
 			next.ServeHTTP(w, r)
 			return
 		}
+
 		page := GetOrCreatePageCtx(r.Context())
 		// 2. Извлекаем IP-адрес клиента оригинальным проверенным методом
 		page.IP = GetClientIP(r)
@@ -51,12 +52,6 @@ func PageContext(next http.Handler) http.Handler {
 			page.IsAnonymous = true
 
 			ctx := SavePageCtx(r.Context(), page)
-
-			if config.IsPublicPath(path) {
-				slog.Debug("[PCTX] Публичный путь, пропускаем без SSO", "path", path)
-				next.ServeHTTP(w, r.WithContext(ctx))
-				return
-			}
 
 			slog.Error("[PCTX]", "Попытка анонимного входа на ", path, "c адреса", page.IP)
 			http.Redirect(w, r, config.Cfg.LOGIN_PAGE, http.StatusSeeOther)
