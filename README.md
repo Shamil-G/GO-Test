@@ -1,2 +1,34 @@
-# GO-Test
-Тестирование
+# Регистрация времени отсутствия
+
+## Удаляем старый go.mod (если он скопировался из старого проекта)
+
+rm go.mod
+
+## Создаем новый модуль с правильным контекстом
+
+go mod init gusseynov/GO-Quiz
+
+## Необходимые пакеты
+
+go get github.com/go-chi/chi/v5
+go get github.com/joho/godotenv
+go get github.com/sijms/go-ora/v2
+go get github.com/jmoiron/sqlx
+go get github.com/prometheus/client_golang/prometheus@v1.23.2
+go get github.com/prometheus/client_golang/prometheus/promhttp
+go get github.com/xuri/excelize/v2
+go get github.com/natefinch/lumberjack
+go mod tidy
+
+## Стартуем prometeus
+
+### Докер Grafana
+
+docker run -d \
+  -p 9090:9090 \
+  -v /path/to/prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus
+
+### Проверяем работоспособность Grafana
+
+http://localhost:9090/targets

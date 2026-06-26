@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ res_value "APP_NAME" }}</title>
+   <link rel="stylesheet" href="/static/css/quiz.css">        
+    <style>
+    </style>
+ </head>
+<body class="body-testing">
+    <div class="quiz-container">
+        
+        <!-- === 1. ПОЛЕ: HEADER === -->
+        <header class="quiz-header">
+            <div class="header-top">
+                <h1 class="quiz-title">
+                    {{ if .QuizName }}
+                        {{.QuizName}}
+                    {{ else }}
+                        <span class="no-quiz-alert">{{ res_value "QUIZ_ABSENT" }}</span>
+                    {{ end }}
+                </h1>
+                <div class="timer-badge">
+                    ⏱️ <span id="timer" data-end="{{.Question.EndUnix}}">{{ if .RemainTimeStr }}{{.RemainTimeStr}}{{ else }}--:--{{ end }}</span>
+                </div>
+            </div>
+
+            {{ if .QuestionNav }}
+            <div class="nav-wrapper">
+                <span class="nav-label">{{ res_value "LIST_QUESTIONS" }}:</span>
+                {{ range .QuestionNav }}
+                    <a href="/quiz/process?num={{.Num}}" 
+                    class="btn-nav-quest {{ if eq .IsAnswered 1 }}answered{{ else }}not-answered{{ end }} {{ if eq .IsCurrent 1 }}current{{ end }}">
+                        {{.Num}}
+                    </a>
+                {{ end }}
+            </div>
+            {{ end }}
+
+        </header>
+
+        <!-- Главная форма -->
+        <form id="quizForm" method="POST" action="/quiz/process" style="display: flex; flex-direction: column; flex-grow: 1; margin: 0;">
+            <input type="hidden" name="id_reg" value="{{.IDReg}}">
+            <input type="hidden" name="id_quest" value="{{.Question.IDQuest}}">
+            <input type="hidden" name="current_num" value="{{.CurrentQuestionNum}}">
+
+            <!-- === 2. ПОЛЕ: РАБОЧАЯ ЗОНА === -->
+            <main class="work-container {{ if .Question.ImageURL }}has-image{{ else }}no-image{{ end }}">
+                
+                {{ if .Question.ImageURL }}
+                <div class="image-box">
+                    <img src="{{.Question.ImageURL}}" alt="{{ res_value "PICTURE_TO_QUESTION" }}"/>
+                </div>
+                {{ end }}
+
+                <div class="question-box">
+                    <div>
+                        <h2 class="question-text">
+                            {{ if .Question.Text }}
+                                {{.Question.Text}}
+                            {{ else }}
+                                <span style="color: #e11d48;">{{ res_value "QUESTIONS_ABSENT"}}</span>
+                            {{ end }}
+                        </h2>
+                        <div class="question-divider"></div>
+                    </div>
+                    
+                    {{ if .Answers }}
+                    <span class="select-alert-text">{{ res_value "SELECT_ONE_ANSWER" }}:</span>
+                    {{ end }}
+
+                    <div class="answers-group">
+                        {{ if .Answers }}
+                            {{ range .Answers }}
+                            <label class="answer-label-card">
+                                <input type="radio" name="answer_id" value="{{.IDAnswer}}" 
+                                        required class="custom-radio"
+                                        {{ if eq $.Question.SelectedAnswer .IDAnswer }}checked{{ end }}
+                                        />
+                                <span class="answer-title-text">{{.Text}}</span>
+                            </label>
+                            {{ end }}
+                        {{ else }}
+                            {{ if .QuizName }}
+                            <div class="error-box">{{ res_value "ANSWER_ABSENT" }}</div>
+                            {{ end }}
+                        {{ end }}
+                    </div>
+                </div>
+            </main>
+            <!-- === 3. ПОЛЕ: FOOTER (НАВИГАЦИЯ) === -->
+            <footer class="quiz-footer">
+                <div class="footer-nav-move">
+                    <button type="submit" style="margin:0px 20px; padding-left: 20px;" class="btn btn-submit" {{ if not .Answers }}disabled{{ end }} value="save">
+                        {{ res_value "BUTTON_SAVE_NEXT"}}
+                    </button>                    
+                    <a href="/quiz/process?move=first" class="btn btn-move" style="margin-left: 40px">{{ res_value "BUTTON_TO_START"}}</a>
+                    <a href="/quiz/process?move=prev" class="btn btn-move">{{ res_value "BUTTON_PREV" }}</a>
+                    <a href="/quiz/process?move=next" class="btn btn-move">{{ res_value "BUTTON_NEXT" }}</a>
+                    <a href="/quiz/process?move=last" class="btn btn-move">{{ res_value "BUTTON_TO_END" }}</a>
+                </div>
+
+                <div class="footer-actions">
+                    <button type="button" id="btnFinishQuiz" class="btn btn-finish">{{ res_value "FINISH_QUIZ" }}</button>
+                </div>
+            </footer>
+        </form>
+    </div>
+  <!-- Нативный JavaScript -->
+  <script src="/static/js/quiz_testing.js"></script>
+</body>
+</html>

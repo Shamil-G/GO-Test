@@ -1,0 +1,256 @@
+/* ====================================================================
+   1. ПАЛИТРА ДЛЯ СВЕТЛОЙ ТЕМЫ (По умолчанию)
+   ==================================================================== */
+:root {
+    --quiz-bg: #e3f6e4;
+    --card-bg: #e8f8ea;
+    --card-border: #b8e2c2;
+    --text-primary: #212529;
+    --text-muted: #6c757d;
+    --btn-bg: #2a9d8f;          /* Фирменный зеленый */
+    --btn-back-bg: #6c757d;
+    --timer-color: #e63946;     /* Аккуратный красный */
+    --timer-bg: rgba(230, 57, 70, 0.1);
+    --row-hover: rgba(0, 0, 0, 0.02);
+    --scroll-track-bg: #f5f5f5;
+    --scroll-thumb-bg: #2a9d8f;
+
+    --form-background: #d0ebe2;
+    --background-img-url: url(/static/img/bg.jpg);
+}
+
+/* ====================================================================
+   2. ПАЛИТРА ДЛЯ ТЕМНОЙ ТЕМЫ
+   ==================================================================== */
+body.dark {
+    --quiz-bg: #121212;
+    --card-bg: #1e1e1e;
+    --card-border: #333333;
+    --text-primary: #f8f9fa;
+    --text-muted: #a0a0a0;
+    --btn-bg: #2a9d8f;
+    --btn-back-bg: #495057;
+    --timer-color: #ff4d5a;
+    --timer-bg: rgba(255, 77, 90, 0.15);
+    --row-hover: rgba(255, 255, 255, 0.03);
+    --scroll-track-bg: #2a2a2a;
+    --scroll-thumb-bg: #2a9d8f;
+}
+
+/* ====================================================================
+   3. ГЛОБАЛЬНЫЕ СБРОСЫ И БАЗОВЫЕ КОНТЕЙНЕРЫ
+   ==================================================================== */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body, .body-testing {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--quiz-bg);
+    background-image: var(--background-img-url);
+    background-repeat: repeat;
+    background-position: center;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 24px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Общий адаптивный контейнер */
+.quiz-container { 
+    width: 100%; 
+    background: var(--card-bg); 
+    border-radius: 16px; 
+    border: 1px solid var(--card-border); 
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); 
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+    height: calc(100vh - 48px); 
+}
+
+.layout-card-start { max-width: 800px; height: auto; min-height: 500px; }
+.layout-card-testing { width: 100%; }
+
+/* Форма жестко растягивается на 100% высоты для фиксации футера */
+#quizForm, .quiz-dynamic-form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
+}
+
+/* ====================================================================
+   4. ВЕРХНЯЯ ЧАСТЬ: ХЕДЕР И ТАЙМЕР
+   ==================================================================== */
+.quiz-header { 
+    padding: 24px; 
+    border-bottom: 2px solid var(--card-border); 
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+}
+
+.header-top { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 16px; 
+}
+
+.quiz-title { 
+    font-size: 22px; 
+    font-weight: bold; 
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+
+.timer-badge, .quiz-timer {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--timer-color);
+    background: var(--timer-bg);
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-family: monospace;
+    white-space: nowrap;
+}
+
+.no-quiz-alert { 
+    color: #e11d48; 
+    background-color: #fff1f2; 
+    border: 1px solid #fecdd3; 
+    padding: 6px 12px; 
+    border-radius: 8px; 
+    font-size: 14px; 
+    font-weight: 600; 
+    display: inline-block;
+}
+
+/* Навигационная плитка вопросов в Хедере */
+.nav-wrapper { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; border-top: 1px solid var(--card-border); padding-top: 12px; }
+.nav-label { font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; tracking-width: 0.5px; margin-right: 8px; }
+
+.btn-nav-quest { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-family: monospace; font-weight: 700; font-size: 14px; text-decoration: none; border: 1px solid transparent; transition: all 0.2s ease; }
+.btn-nav-quest.answered { background-color: #10b981; color: #ffffff; border-color: #059669; }
+.btn-nav-quest.answered:hover { background-color: #059669; }
+.btn-nav-quest.not-answered { background-color: #fbbf24; color: #1e293b; border-color: #f59e0b; }
+.btn-nav-quest.not-answered:hover { background-color: #f59e0b; }
+.btn-nav-quest.current { box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.4); border-color: #0f172a; transform: scale(1.05); }
+
+/* ====================================================================
+   5. ЦЕНТРАЛЬНАЯ ЧАСТЬ: РАБОЧАЯ ЗОНА С ДВУМЯ КОЛОНКАМИ
+   ==================================================================== */
+.work-container { 
+    padding: 40px 32px; 
+    display: grid; 
+    grid-template-columns: 1fr; 
+    gap: 40px; 
+    flex-grow: 1; 
+    align-items: start; 
+}
+
+@media (min-width: 768px) {
+    .work-container.has-image { grid-template-columns: 1fr 1fr; }
+    .work-container.no-image { grid-template-columns: 1fr; }
+}
+
+.image-box { width: 100%; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.image-box img { width: 100%; height: 100%; object-fit: cover; max-height: 400px; }
+
+/* Блок контента вопроса */
+.question-box { display: flex; flex-direction: column; gap: 24px; width: 100%; }
+
+.question-text { 
+    font-size: 24px; 
+    font-weight: 800; 
+    color: var(--text-primary); 
+    line-height: 1.4;
+    display: block;
+    width: 100%;
+    margin-bottom: 16px;
+    text-align: justify;
+}
+
+/* ИСПРАВЛЕНО: Линия под вопросом растягивается на 100% без наложения на буквы */
+.question-divider { 
+    height: 3px; 
+    width: 100%; 
+    background-color: #10b981; 
+    border-radius: 2px; 
+    margin-top: 0;
+    display: block;
+}
+
+.select-alert-text { font-weight: 700; color: #6366f1; text-transform: uppercase; }
+
+/* ====================================================================
+   6. КОМПОНЕНТЫ ВАРИАНТОВ ОТВЕТОВ С БОЛЬШИМИ КНОПКАМИ
+   ==================================================================== */
+.answers-group { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+
+.answer-label-card { 
+    display: flex; 
+    align-items: center; 
+    gap: 16px; 
+    padding: 16px; 
+    border-radius: 12px; 
+    border: 2px solid #e2e8f0; 
+    cursor: pointer; 
+    background: var(--card-bg);
+    transition: all 0.2s ease; 
+}
+.answer-label-card:hover { border-color: #a7f3d0; background-color: rgba(240, 253, 250, 0.3); }
+.answer-title-text { font-size: 16px; font-weight: 600; color: #334155; }
+
+/* Кастомный крупный круглый переключатель */
+.custom-radio { 
+    -webkit-appearance: none; appearance: none; background-color: #fff; width: 24px; height: 24px; border: 2px solid #cbd5e1; border-radius: 50%; display: grid; place-content: center; cursor: pointer; flex-shrink: 0; 
+}
+.custom-radio::before { content: ""; width: 12px; height: 12px; border-radius: 50%; transform: scale(0); transition: 100ms transform ease; background-color: #10b981; }
+.custom-radio:checked { border-color: #10b981; }
+.custom-radio:checked::before { transform: scale(1); }
+
+/* Подсветка всей строки при выборе */
+.answer-label-card.selected-active { border-color: #10b981; background-color: #ecfdf5; }
+.answer-label-card.selected-active .answer-title-text { color: #065f46; }
+
+.error-box { padding: 16px; background-color: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: 12px; font-weight: 600; }
+
+/* ====================================================================
+   7. НИЖНЯЯ ЧАСТЬ: ФУТЕР И НАВИГАЦИЯ КНОПОК
+   ==================================================================== */
+.quiz-footer { 
+    padding: 24px; 
+    border-top: 1px solid #e2e8f0; 
+    background-color: #f8fafc; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+    margin-top: auto; 
+}
+@media (min-width: 640px) { .quiz-footer { flex-direction: row; justify-content: space-between; align-items: center; } }
+
+.footer-nav-move { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.footer-actions { display: flex; align-items: center; gap: 12px; }
+
+/* Базовые кнопки */
+.btn { padding: 10px 18px; font-size: 14px; font-weight: 700; border-radius: 12px; border: 1px solid transparent; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; transition: filter 0.2s ease; }
+.btn:hover { filter: brightness(0.9); }
+
+.btn-move { background-color: #ffffff; border-color: #cbd5e1; color: #475569; }
+.btn-move:hover { border-color: #94a3b8; color: #1e293b; }
+.btn-finish { background-color: #fff5f5; color: #c53030; border-color: #fed7d7; }
+.btn-finish:hover { background-color: #fff1f1; }
+.btn-submit { background-color: #10b981; color: #ffffff; border-color: #059669; }
+.btn-submit:hover { background-color: #059669; }
+.btn-submit:disabled { background-color: #cbd5e1; border-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
+
+/* Точечные ручные отступы для кнопок навигации */
+.btn-save-fix { margin: 0px 20px; padding-left: 20px; }
+.btn-first-fix { margin-left: 40px; }

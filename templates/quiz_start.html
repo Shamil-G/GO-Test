@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="{{ .Lang }}" data-theme="{{ .Theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Начало тестирования</title>
+    <link rel="stylesheet" href="/static/css/quiz.css">
+</head>
+<body class=""> 
+    <div class="quiz-container-start">
+        <div class="quiz-header-start">
+            <div>
+                <div class="progress-value">{{ .QuizName }}</div>
+            </div>
+            <div class="quiz-timer">{{ .DurationMinutes }} мин</div>
+        </div>
+        
+        <p class="quiz-description"><span>{{ res_value "WELCOME" }}</span></p>
+        
+
+        <div class="quiz-meta-grid">
+            <div class="meta-item">{{ res_value "QUESTIONS_COUNT" }}: <strong>{{ .QuestionsCount }}</strong></div>
+            <div class="meta-item">{{ res_value "PASSING_COUNT" }}: <strong>{{ .PassingScore }}</strong></div>
+        </div>
+
+        <!-- Блок для динамического вывода ошибок (по умолчанию скрыт) -->
+        <div id="errorContainer" class="error-box" style="display: none; margin-bottom: 20px;"></div>
+
+
+        <!-- Форма авторизации/сессии -->
+        <form id="startQuizForm">
+            <!-- Скрытые технические поля для передачи в JS/БД -->
+            <input type="hidden" name="id_quiz" id="idQuiz" value="{{ .IDQuiz }}">
+            <input type="hidden" name="fio" id="fioInput" value="{{ .FIO }}">
+            <input type="hidden" name="dep_name" id="depInput" value="{{ .DepName }}">
+
+            <div class="form-group">
+                <label>{{ res_value "YOUR_FIO" }}:</label>
+                <pre class="form-control-static">{{ .FIO }}</pre>
+            </div>
+
+            <div class="form-group">
+                <label>{{ res_value "YOUR_DEP_NAME" }}:</label>
+                <pre class="form-control-static">{{ .DepName }}</pre>
+            </div>
+
+            <div class="quiz-footer-start" style="justify-content: flex-end;">
+                <button type="submit" class="btn-quiz btn-next">{{ res_value "START_TESTING" }}</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/static/js/quiz_start.js"></script>
+</body>
+</html>
