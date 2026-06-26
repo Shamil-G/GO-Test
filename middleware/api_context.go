@@ -20,9 +20,11 @@ func ApiContext(next http.Handler) http.Handler {
 		ssoUser, err := sso.Client.CheckSession(r.Context(), page.IP)
 		if err != nil {
 			slog.Warn("SSO session check failed", "ip", page.IP, "error", err)
+
+			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusUnauthorized)
 			json.NewEncoder(w).Encode(map[string]any{
-				"error": "unauthorized",
+			    "error": "unauthorized",
 			})
 			return
 		}
